@@ -1,0 +1,38 @@
+<html>
+<head>
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/rainbow.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="center-block">
+            <h1>Rainbow palette generator</h1>
+            <div class="pull-right" id="color-format">
+            <button type="button" class="btn btn-default" id="random">Random</button>
+            <div class="btn-group" role="group" aria-label="color-format">
+                <button type="button" class="btn btn-default" id="hex">HEX</button>
+                <button type="button" class="btn btn-default" id="rgb">RGB</button>
+                <button type="button" class="btn btn-default" id="hsl">HSL</button>
+            </div>
+            </div>
+            <p>Number of colors <span id="sum-value"></span></p>
+            <div id="num" class="slider"></div>
+            <p>Saturation <span id="saturation-value"></span></p>
+            <div id="saturation" class="slider"></div>
+            <p>Lightness <span id="lightness-value"></span></p>
+            <div id="lightness" class="slider"></div>
+            <p>Hue range <span id="hue-value"></span></p>
+            <div id="hue" class="slider"></div>
+
+            <div id="palette"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
