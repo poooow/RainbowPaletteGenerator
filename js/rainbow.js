@@ -2,7 +2,6 @@
  * @author Petr Kratochvila poooow@gmail.com
  */
 
-
 function rand(min, max) {
     return parseInt(Math.random() * (max - min + 1), 10) + min;
 }
@@ -59,7 +58,7 @@ function HueToRgb(m1, m2, hue) {
 }
 
 /**
- * Convert hsl color ot hex
+ * Convert hsl color to hex
  *
  * @param h Hue
  * @param s Saturation
@@ -69,12 +68,59 @@ function HueToRgb(m1, m2, hue) {
 function hslToHex(h, s, l) {
     var color = hslToRgb(h, s, l);
 
-    color = color.map(function (v) {
-        return v.toString(16);
+    color = color.map(function pad (v) {
+
+        v = v.toString(16);
+        v.length < 2 ? (v = "0" + v) : v; // Add zero before hex number to keep constant length of hex color string
+
+        return v;
     });
 
     return color;
 }
+/**
+ * returns
+ * 
+ * @param Hex string #DDEEFF
+ * @returns {Array} of hsl
+ */
+function hexToHsl (hex) {
+    var r, g, b;
+
+    if (hex.length == 7) {
+        r = parseInt(hex.substring(1, 3), 16);
+        g = parseInt(hex.substring(3, 5), 16);
+        b = parseInt(hex.substring(5, 7), 16);
+    } else if (hex.length == 4) {
+        r = parseInt(hex.substring(1, 2) + hex.substring(1, 2), 16);
+        g = parseInt(hex.substring(2, 3) + hex.substring(2, 3), 16);
+        b = parseInt(hex.substring(3, 4) + hex.substring(3, 4), 16);
+    }
+
+    return rgbToHsl(r,g,b);
+}
+
+function rgbToHsl(r, g, b){
+    r /= 255, g /= 255, b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if(max == min){
+        h = s = 0; // achromatic
+    }else{
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max){
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [Math.floor(h * 360), Math.floor(s * 100), Math.floor(l * 100)];
+}
+
 
 /**
  * Generate num of colors for palette of given parameters
@@ -128,7 +174,7 @@ function generatePalette(num, saturation, lightness, hueMin, hueMax, format) {
     /* To display color itself */
     var paletteColors = get_palette_colors(num, saturation, lightness, hueMin, hueMax, 'hsl');
     /* To make label */
-    var paletteColorsHex = get_palette_colors(num, saturation, lightness, hueMin, hueMax, format);
+    var paletteColorsLabel = get_palette_colors(num, saturation, lightness, hueMin, hueMax, format);
 
     for (var i = paletteColors.length - 1; i >= 0; i--) {
 
@@ -140,7 +186,7 @@ function generatePalette(num, saturation, lightness, hueMin, hueMax, format) {
 
         /* Color label */
         var colorLabel = document.createElement('div');
-        colorLabel.innerHTML = colorLabel.innerHTML + paletteColorsHex[i];
+        colorLabel.innerHTML = colorLabel.innerHTML + paletteColorsLabel[i];
         colorLabel.className = 'color-label';
         color.appendChild(colorLabel);
     }
@@ -148,6 +194,7 @@ function generatePalette(num, saturation, lightness, hueMin, hueMax, format) {
 
 /**
  *  Change palette parameters (trigger when changed)
+ *
  *  @param format
  */
 function changeColors() {
@@ -156,7 +203,6 @@ function changeColors() {
     var lightness = $("#lightness").slider("value");
     var hueMin = $("#hue").slider("values", 0);
     var hueMax = $("#hue").slider("values", 1);
-
 
     updateValueLabels(num, saturation, lightness, hueMin, hueMax);
     generatePalette(num, saturation, lightness, hueMin, hueMax, format);
@@ -193,8 +239,44 @@ function randomize() {
 
     $("#hue").slider('values', 0, min);
     $("#hue").slider('values', 1, max);
-
 }
+
+/**
+ * Create color palette from given color, maintaining same lightness and saturation
+ * 
+ * @param color  eg. #ddeeff, #def, rgb(255,255,255)
+ */
+function myColor(color) {
+    var hexPatt = '^#(?:[0-9a-fA-F]{3}){1,2}$';
+    var rgbPatt = '^rgb\\(\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*\\)$';
+    var hslColor;
+
+    if (!color.search(hexPatt)) {
+
+        $("#my-color").addClass('correct'); // Mark form input when acceptable format detected
+        
+        hslColor = hexToHsl(color);
+
+    } else if (!color.search(rgbPatt)) {
+        
+        $("#my-color").addClass('correct'); // Mark form input when acceptable format detected
+
+        var matchColors = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+        var match = matchColors.exec(color);
+        hslColor = rgbToHsl(match[1],match[2],match[3]);
+
+    } else {
+        $("#my-color").removeClass('correct');
+        return;
+    }
+
+    $("#saturation").slider('value', hslColor[1]);
+    $("#lightness").slider('value', hslColor[2]);
+}
+
+/**
+ *  Handle all actions on page
+ */
 
 $(function () {
     $("#saturation, #lightness").slider({
@@ -237,6 +319,10 @@ $(function () {
         event.preventDefault();
         randomize();
         changeColors();
+    });
+
+    $('#my-color').on('input',function() {
+        myColor($('#my-color').val());
     });
 });
 

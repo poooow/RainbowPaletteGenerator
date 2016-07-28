@@ -11,6 +11,18 @@ h1 {
     padding-bottom: 20pt;
 }
 
+input {
+    color: #2b2b2b;
+    height: 25pt;
+    top: 1pt;
+    border-radius: 3pt;
+    position: relative;
+}
+
+.correct {
+    background-color: #f1ffeb;
+}
+
 #color {
     width: 60pt;
     height: 60pt;
