@@ -275,6 +275,13 @@ function myColor(color) {
 }
 
 /**
+ *  Clean input array for custom color
+ */
+function cleanInput () {
+    $("#my-color").val("");
+}
+
+/**
  *  Handle all actions on page
  */
 
@@ -318,6 +325,7 @@ $(function () {
     $("#random").click(function (event) {
         event.preventDefault();
         randomize();
+        cleanInput();
         changeColors();
     });
 
