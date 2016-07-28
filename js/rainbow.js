@@ -279,6 +279,7 @@ function myColor(color) {
  */
 function cleanInput () {
     $("#my-color").val("");
+    $("#my-color").removeClass('correct');
 }
 
 /**
