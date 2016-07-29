@@ -19,6 +19,10 @@ input {
     position: relative;
 }
 
+a {
+    color: #BAD4E8;
+}
+
 .correct {
     background-color: #f1ffeb;
 }
@@ -83,4 +87,14 @@ input {
 .content {
     padding-left: 30pt;
     padding-right: 30pt;
+}
+
+#footer {
+    position: fixed;
+    height: 35pt;
+    bottom: 0;
+    width: 100%;
+    background-color: #2b2b2b;
+    padding: 10pt;
+    z-index: 1000;
 }
