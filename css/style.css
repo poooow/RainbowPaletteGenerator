@@ -97,4 +97,5 @@ a {
     background-color: #2b2b2b;
     padding: 10pt;
     z-index: 1000;
+    box-shadow: -3px -3px 3px #4f4f4f;
 }
