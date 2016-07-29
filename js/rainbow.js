@@ -181,7 +181,7 @@ function generatePalette(num, saturation, lightness, hueMin, hueMax, format) {
         /* Colored circle */
         var color = document.createElement('div');
         color.style.backgroundColor = paletteColors[i];
-        color.id = 'color';
+        color.className = 'color';
         paletteDiv.appendChild(color);
 
         /* Color label */
