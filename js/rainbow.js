@@ -23,7 +23,7 @@ function hslToRgb(h, s, l) {
     s /= 100;
     l /= 100;
     if (s == 0)
-        r = g = b = (l * 255);
+        r = g = b = Math.round(l * 255);
     else {
         if (l <= 0.5)
             m2 = l * (s + 1);
